@@ -12,5 +12,6 @@ package calendario;
 public class Exame {
     int id;
     Cadeira cadeira;
+    Aluno inscritos[];
     int totalAlunos;
 }

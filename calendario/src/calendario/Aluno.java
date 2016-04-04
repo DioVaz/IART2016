@@ -12,18 +12,11 @@ package calendario;
 public class Aluno {
     int id;
     String nome;
-    Cadeira epoca_normal[];
-    Cadeira epoca_recurso[];
 
     Aluno(int id, String nome){
         this.id=id;
         this.nome=nome;
-        epoca_normal=null;
-        epoca_recurso=null;
     }
     
-    void inscricao(Cadeira epoca_normal[], Cadeira epoca_recurso[]){
-        this.epoca_normal=epoca_normal;
-        this.epoca_recurso=epoca_recurso;
-    }
+    
 }
