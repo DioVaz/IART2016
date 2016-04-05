@@ -8,6 +8,8 @@ package calendario;
 /**
  *
  * @author Diogo
+ * @author José
+ * @author Renato
  */
 public class Aluno {
     int id;

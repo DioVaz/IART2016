@@ -8,13 +8,15 @@ package calendario;
 /**
  *
  * @author Diogo
+ * @author José
+ * @author Renato
  */
 public class Cadeira {
-    int id;
+    String id;
     String nome;
     int ano;
     
-    Cadeira(int id, String nome, int ano){
+    Cadeira(String id, String nome, int ano){
         this.id=id;
         this.nome=nome;
         this.ano=ano;

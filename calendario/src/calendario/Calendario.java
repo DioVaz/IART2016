@@ -12,6 +12,8 @@ import java.util.logging.*;
 /**
  *
  * @author Diogo
+ * @author José
+ * @author Renato
  */
 public class Calendario {
     /*
@@ -19,15 +21,114 @@ public class Calendario {
     */
     static String Alunos_File = "alunos.txt";
     static String Cadeiras_File = "cadeiras.txt";
-    static String Exames_File = "exames.txt";
-    static String Inscricoes_File = "inscricoes.txt";
+    static String Calendario_File = "calendario.txt";
     /*
         *** ARRAYS ***
     */
-    Aluno alunos[];
-    Cadeira cadeiras[];
-    Exame epoca_normal[];
-    Exame epoca_recurso[];
+    static Aluno alunos[];
+    static Cadeira cadeiras[];
+    static Exame[] exames;
+    
+    //FUNÇÕES AUXILIARES SAVE/LOAD
+     /**
+     * @param CalendarioFile
+     **/
+    @SuppressWarnings("empty-statement")
+    public static void loadCalendario(String CalendarioFile){
+        try (BufferedReader br = new BufferedReader(new FileReader(CalendarioFile))) {
+            System.out.println("*** EXAMES: ***");
+            String line;
+            int id =0;
+            line = br.readLine();
+            int total = Integer.parseInt(line);
+            exames = new Exame[total];
+            while ((line = br.readLine()) != null) {
+                // process the line. Exame(int id, String cadeira,int IDinscritos[], boolean recurso)
+                System.out.println(line);
+                String[] parts = line.split("-");
+                String recurso = parts[0];//NORMAL/RECURSO
+                Boolean epoca = recurso.equals("NORMAL");
+                String idCadeira = parts[1];//ID CADEIRA
+                //INSCRITOS
+                int totalIns;
+                totalIns = parts.length-2;
+                int[] inscritos = new int[totalIns];
+                for(int count = 2;count<parts.length;count++){
+                    String num = parts[count];
+                    inscritos[count-2] = Integer.parseInt(num);
+                }
+                Exame novo = new Exame(id,idCadeira,inscritos,epoca);
+                exames[id]=novo;
+                id++;
+                }
+        }   catch (IOException ex) {
+                Logger.getLogger(Calendario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    /**
+     * @param CadeirasFile
+     **/
+    public static void loadCadeiras(String CadeirasFile){
+        try (BufferedReader br = new BufferedReader(new FileReader(CadeirasFile))) {
+            System.out.println("*** CADEIRAS: ***");
+            String line;
+            int i =0;
+            line = br.readLine();
+            int total = Integer.parseInt(line);
+            cadeiras = new Cadeira[total];
+            while ((line = br.readLine()) != null) {
+                // process the line.
+                System.out.println(line);
+                String[] parts = line.split("-");
+                String part1 = parts[0];
+                String part2 = parts[1]; 
+                String part3 = parts[2];
+                int numero2 = Integer.parseInt(part3);
+                Cadeira novo = new Cadeira(part1,part2, numero2);
+                cadeiras[i]=novo;
+                i++;
+                }
+        }   catch (IOException ex) {
+                Logger.getLogger(Calendario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    /**
+     * @param AlunosFile
+     **/
+    public static void loadAlunos(String AlunosFile){
+        try (BufferedReader br = new BufferedReader(new FileReader(AlunosFile))) {
+            System.out.println("*** ALUNOS: ***");
+            String line;
+            int i =0;
+            line = br.readLine();
+            int total = Integer.parseInt(line);
+            alunos = new Aluno[total];
+            while ((line = br.readLine()) != null) {
+                // process the line.
+                System.out.println(line);
+                String[] parts = line.split("-");
+                String part1 = parts[0];
+                int numero = Integer.parseInt(part1);
+                String part2 = parts[1]; 
+                Aluno novo = new Aluno(numero,part2);
+                alunos[i]=novo;
+                i++;
+                }
+        }   catch (IOException ex) {
+                Logger.getLogger(Calendario.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}
+    /**
+     * @param AlunosFile
+     * @param CadeirasFile
+     * @param Inscritos
+     * @param Calendario
+     */
+    public static void readFiles(String AlunosFile, String CadeirasFile, String CalendarioFile){ 
+        loadAlunos(AlunosFile);
+        loadCadeiras(CadeirasFile);
+        loadCalendario(CalendarioFile);
+    }
     
     /**
      * @param AlunosFile
@@ -35,35 +136,28 @@ public class Calendario {
      * @param Inscritos
      * @param Calendario
      */
-    public static void readFiles(String AlunosFile, String CadeirasFile, String Inscritos, String Calendario){
-        
-    //deserialize the alunos file
-    try(
-      InputStream fileAlunos = new FileInputStream(AlunosFile);
-      InputStream buffer = new BufferedInputStream(fileAlunos);
-      ObjectInput input = new ObjectInputStream (buffer);
-    ){
-      //deserialize the List
-      List<String> recoveredQuarks = (List<String>)input.readObject();
-      //display its data
-      for(String quark: recoveredQuarks){
-        System.out.println("Recovered Quark: " + quark);
-      }
-    }
-    catch(ClassNotFoundException ex){
-      fLogger.log(Level.SEVERE, "Cannot perform input. Class not found.", ex);
-    }
-    catch(IOException ex){
-      fLogger.log(Level.SEVERE, "Cannot perform input.", ex);
-    }
-    }
+    public static void writeFiles(String AlunosFile, String CadeirasFile, String Calendario){ 
+        File file =new File("puta.txt");
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter("puta.txt", "UTF-8");
+            writer.println("The first line");
+            writer.println("The second line");
+            writer.close();
+        } catch (UnsupportedEncodingException | FileNotFoundException ex) {
+            Logger.getLogger(Calendario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        System.out.println(file.getAbsolutePath());
+   }
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         // TODO code application logic here
         //ler ficheiro e preencher array Cadeiras
-        readFiles(Alunos_File,Cadeiras_File,Inscricoes_File, Exames_File);
+        
+        readFiles(Alunos_File,Cadeiras_File,Calendario_File);
         //ler ficheiro e preencher array Alunos e inicial
         //fazer magia de IART
         //apresentar e guardar resultado

@@ -8,10 +8,20 @@ package calendario;
 /**
  *
  * @author Diogo
+ * @author José
+ * @author Renato
  */
 public class Exame {
     int id;
-    Cadeira cadeira;
-    Aluno inscritos[];
-    int totalAlunos;
+   String cadeira;
+    int IDinscritos[];
+    boolean recurso;
+    
+    Exame(int id, String cadeira,int IDinscritos[], boolean recurso){
+        this.id=id;
+        this.cadeira=cadeira;
+        this.IDinscritos=IDinscritos;
+        this.recurso=recurso;
+        
+    }
 }
