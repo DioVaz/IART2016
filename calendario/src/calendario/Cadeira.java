@@ -21,4 +21,8 @@ public class Cadeira {
         this.nome=nome;
         this.ano=ano;
     }
+    
+    String getId(){return id;}
+    String getNome(){return nome;}
+    int getAno(){return ano;}
 }

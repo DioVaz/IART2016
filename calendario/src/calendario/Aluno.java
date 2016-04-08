@@ -20,5 +20,7 @@ public class Aluno {
         this.nome=nome;
     }
     
+    int getID(){return id;}
+    String getNome(){return nome;}
     
 }

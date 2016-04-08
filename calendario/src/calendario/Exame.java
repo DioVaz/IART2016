@@ -13,15 +13,28 @@ package calendario;
  */
 public class Exame {
     int id;
-   String cadeira;
+    String cadeira;
     int IDinscritos[];
-    boolean recurso;
+    boolean epoca;
     
     Exame(int id, String cadeira,int IDinscritos[], boolean recurso){
         this.id=id;
         this.cadeira=cadeira;
         this.IDinscritos=IDinscritos;
-        this.recurso=recurso;
-        
+        this.epoca=recurso;
+    }
+    
+    int getID(){return id;}
+    String getCadeira(){return cadeira;}
+    String getinscritos(){
+        String inscritos="";
+        for(int i = 0; i<IDinscritos.length;i++){
+            inscritos=inscritos+"-"+IDinscritos[i];
+        }
+        return inscritos;
+    }
+    String getEpoca(){
+        if(epoca){return "NORMAL";}
+        else{return "RECURSO";}
     }
 }

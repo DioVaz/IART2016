@@ -121,8 +121,7 @@ public class Calendario {
     /**
      * @param AlunosFile
      * @param CadeirasFile
-     * @param Inscritos
-     * @param Calendario
+     * @param CalendarioFile
      */
     public static void readFiles(String AlunosFile, String CadeirasFile, String CalendarioFile){ 
         loadAlunos(AlunosFile);
@@ -130,6 +129,56 @@ public class Calendario {
         loadCalendario(CalendarioFile);
     }
     
+    public static void saveAlunos(String AlunosFile){
+       File file =new File(AlunosFile);
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(AlunosFile, "UTF-8");
+            int total=alunos.length;
+            writer.println(total);
+            for (int i=0; i<total;i++){
+               String registo = alunos[i].getID()+"-"+alunos[i].getNome();
+               writer.println(registo); 
+            }
+            writer.close();
+        } catch (UnsupportedEncodingException | FileNotFoundException ex) {
+            Logger.getLogger(Calendario.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    public static void saveCadeiras(String CadeirasFile){
+       File file =new File(CadeirasFile);
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(CadeirasFile, "UTF-8");
+            int total=cadeiras.length;
+            writer.println(total);
+            for (int i=0; i<total;i++){
+               String registo = cadeiras[i].getId()+"-"+cadeiras[i].getNome()+"-"+cadeiras[i].getAno();
+               writer.println(registo); 
+            }
+            writer.close();
+        } catch (UnsupportedEncodingException | FileNotFoundException ex) {
+            Logger.getLogger(Calendario.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
+    
+    public static void saveCalendario(String CalendarioFile){
+       File file =new File(CalendarioFile);
+        PrintWriter writer;
+        try {
+            writer = new PrintWriter(CalendarioFile, "UTF-8");
+            int total=exames.length;
+            writer.println(total);
+            for (int i=0; i<total;i++){
+               String registo = exames[i].getEpoca()+"-"+exames[i].getCadeira()+exames[i].getinscritos();
+               writer.println(registo); 
+            }
+            writer.close();
+        } catch (UnsupportedEncodingException | FileNotFoundException ex) {
+            Logger.getLogger(Calendario.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+    }
     /**
      * @param AlunosFile
      * @param CadeirasFile
@@ -137,30 +186,19 @@ public class Calendario {
      * @param Calendario
      */
     public static void writeFiles(String AlunosFile, String CadeirasFile, String Calendario){ 
-        File file =new File("puta.txt");
-        PrintWriter writer;
-        try {
-            writer = new PrintWriter("puta.txt", "UTF-8");
-            writer.println("The first line");
-            writer.println("The second line");
-            writer.close();
-        } catch (UnsupportedEncodingException | FileNotFoundException ex) {
-            Logger.getLogger(Calendario.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        System.out.println(file.getAbsolutePath());
+        saveAlunos(AlunosFile);
+        saveCadeiras(CadeirasFile);
+        saveCalendario(Calendario);
    }
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
-        // TODO code application logic here
-        //ler ficheiro e preencher array Cadeiras
-        
+        // TODO code application logic here        
         readFiles(Alunos_File,Cadeiras_File,Calendario_File);
-        //ler ficheiro e preencher array Alunos e inicial
         //fazer magia de IART
         //apresentar e guardar resultado
+        writeFiles(Alunos_File,Cadeiras_File,Calendario_File);
     }
     
      // PRIVATE
