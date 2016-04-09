@@ -190,12 +190,19 @@ public class Calendario {
         saveCadeiras(CadeirasFile);
         saveCalendario(Calendario);
    }
+    
+    /**
+     *  ***API***
+     */
+    
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException {
         // TODO code application logic here        
         readFiles(Alunos_File,Cadeiras_File,Calendario_File);
+        //mainAPI();
         //fazer magia de IART
         //apresentar e guardar resultado
         writeFiles(Alunos_File,Cadeiras_File,Calendario_File);
