@@ -17,7 +17,7 @@ public class Exame {
     int IDinscritos[];
     boolean epoca;
     
-    Exame(int id, String cadeira,int IDinscritos[], boolean recurso){
+    public Exame(int id, String cadeira,int IDinscritos[], boolean recurso){
         this.id=id;
         this.cadeira=cadeira;
         this.IDinscritos=IDinscritos;
@@ -25,16 +25,19 @@ public class Exame {
     }
     
     int getID(){return id;}
-    String getCadeira(){return cadeira;}
-    String getinscritos(){
+    public String getCadeira(){return cadeira;}
+    public String getinscritos(){
         String inscritos="";
         for(int i = 0; i<IDinscritos.length;i++){
             inscritos=inscritos+"-"+IDinscritos[i];
         }
         return inscritos;
     }
-    String getEpoca(){
+    public String getEpoca(){
         if(epoca){return "NORMAL";}
         else{return "RECURSO";}
+    }
+    public Boolean getEpocaB(){
+        return epoca;
     }
 }

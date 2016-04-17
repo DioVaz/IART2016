@@ -1,6 +1,7 @@
 /*
- * Lista com os anos dos exames a realizar numa determinada época
- * Consite num array de arrays de inteiros, cada array representa um dia e os inteiros correspondem ao ano dos exames
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 package gerador_calendario;
 
@@ -9,11 +10,15 @@ package gerador_calendario;
  * @author Diogo
  * @author José
  * @author Renato
- */
-public class Calendario_ano {
+ *
+ * 
+**/
+ 
+class Calendario_id {
     Dia dias[];
+    int forca;
     
-    public Calendario_ano(int dias){
+    public Calendario_id(int dias){
         Dia[] novo = new Dia[dias];
         this.dias=novo;
     }
@@ -24,27 +29,26 @@ public class Calendario_ano {
      * @param dia - posição no array correspondente ao dia do exame
      * @param hora - posição no array dia correspondente à hora do exame {0-manhã, 1-tarde, 2-fim de tarde}
      */
-    public void addExame(int exame, int dia, int hora){
-        dias[dia].add(exame, hora);
+    public void addExame(String cadeira, int dia, int hora){
+        dias[dia].add(cadeira, hora);
     }
     
     private static class Dia {
-        int exames[];
+        String exames[];
         public Dia() {
-           int novo[] = {0,0,0}; 
+           String novo[] = {"0","0","0"}; 
            this.exames=novo;
         }
         
-        public void add(int exame, int pos){
+        public void add(String cadeira, int pos){
             //verificar se pos valido
             if(pos>2){return;}
             //adicionar
-            exames[pos]=exame;
+            exames[pos]=cadeira;
         }
     }
     
-    public Boolean checkValidade() {
-        //verificar se existem exames do mesmo ano com menos de 2 dias de diferença
-        return true;
-    }
+    
+    
+    
 }

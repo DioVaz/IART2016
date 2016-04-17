@@ -35,6 +35,25 @@ public class Calendario {
     public Calendario(){
         readFiles(Alunos_File,Cadeiras_File,Calendario_File);
     }
+    
+    /**
+     *  FUNÇÕES AUXILIARES 
+     */
+    public int getNumExames(){
+        return exames.length;
+    }
+    public Exame getExame(int pos){
+        return exames[pos];
+    }
+    public int getAnoExame(String IDCadeira){
+        for(int i=0; i<cadeiras.length;i++){
+            if (cadeiras[i].getId().equals(IDCadeira)){
+                return cadeiras[i].getAno();
+            }
+        }
+        return 0;
+    }
+    
     /**
      *  FUNÇÕES AUXILIARES SAVE/LOAD
      */
