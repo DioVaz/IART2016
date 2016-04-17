@@ -1,12 +1,12 @@
 11
-1234-Diogo Vaz
-8303-Jos� Marques
-8694-Jos� Paulo
-9404-Jos� Cardoso
-8395-Manuel Tostas
-9932-Pedro Esquilo
-8940-Andr� Ricardo
-8404-Rodrigo Bet�o
-9303-Rita Lima
-9324-Fernando Fernandes
-3833-Je suis charlie
+1234-Diogo Vaz-1
+8303-Jose Marques-1
+8694-Jose Paulo-2
+9404-Jose Cardoso-2
+8395-Manuel Tostas-3
+9932-Pedro Esquilo-3
+8940-Andre Ricardo-4
+8404-Rodrigo Betao-4
+9303-Rita Lima-4
+9324-Fernando Fernandes-5
+3833-Je suis charlie-5

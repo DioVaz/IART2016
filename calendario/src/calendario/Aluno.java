@@ -14,13 +14,16 @@ package calendario;
 public class Aluno {
     int id;
     String nome;
+    int ano;
 
-    Aluno(int id, String nome){
+    Aluno(int id, String nome, int ano){
         this.id=id;
         this.nome=nome;
+        this.ano=ano;
     }
     
     int getID(){return id;}
+    int getAno(){return ano;}
     String getNome(){return nome;}
     
 }

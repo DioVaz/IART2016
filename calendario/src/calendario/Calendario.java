@@ -29,12 +29,19 @@ public class Calendario {
     static Cadeira cadeiras[];
     static Exame[] exames;
     
-    //FUNÇÕES AUXILIARES SAVE/LOAD
+    /*
+        *** CONSTRUTOR ***
+    */
+    public Calendario(){
+        readFiles(Alunos_File,Cadeiras_File,Calendario_File);
+    }
+    /**
+     *  FUNÇÕES AUXILIARES SAVE/LOAD
+     */
      /**
      * @param CalendarioFile
      **/
-    @SuppressWarnings("empty-statement")
-    public static void loadCalendario(String CalendarioFile){
+    static void loadCalendario(String CalendarioFile){
         try (BufferedReader br = new BufferedReader(new FileReader(CalendarioFile))) {
             System.out.println("*** EXAMES: ***");
             String line;
@@ -68,7 +75,7 @@ public class Calendario {
     /**
      * @param CadeirasFile
      **/
-    public static void loadCadeiras(String CadeirasFile){
+    static void loadCadeiras(String CadeirasFile){
         try (BufferedReader br = new BufferedReader(new FileReader(CadeirasFile))) {
             System.out.println("*** CADEIRAS: ***");
             String line;
@@ -95,7 +102,7 @@ public class Calendario {
     /**
      * @param AlunosFile
      **/
-    public static void loadAlunos(String AlunosFile){
+    static void loadAlunos(String AlunosFile){
         try (BufferedReader br = new BufferedReader(new FileReader(AlunosFile))) {
             System.out.println("*** ALUNOS: ***");
             String line;
@@ -110,7 +117,9 @@ public class Calendario {
                 String part1 = parts[0];
                 int numero = Integer.parseInt(part1);
                 String part2 = parts[1]; 
-                Aluno novo = new Aluno(numero,part2);
+                String part3 = parts[2];
+                int numero2 = Integer.parseInt(part3);
+                Aluno novo = new Aluno(numero,part2,numero2);
                 alunos[i]=novo;
                 i++;
                 }
@@ -123,13 +132,13 @@ public class Calendario {
      * @param CadeirasFile
      * @param CalendarioFile
      */
-    public static void readFiles(String AlunosFile, String CadeirasFile, String CalendarioFile){ 
+    static void readFiles(String AlunosFile, String CadeirasFile, String CalendarioFile){ 
         loadAlunos(AlunosFile);
         loadCadeiras(CadeirasFile);
         loadCalendario(CalendarioFile);
     }
     
-    public static void saveAlunos(String AlunosFile){
+    static void saveAlunos(String AlunosFile){
        File file =new File(AlunosFile);
         PrintWriter writer;
         try {
@@ -137,7 +146,7 @@ public class Calendario {
             int total=alunos.length;
             writer.println(total);
             for (int i=0; i<total;i++){
-               String registo = alunos[i].getID()+"-"+alunos[i].getNome();
+               String registo = alunos[i].getID()+"-"+alunos[i].getNome()+"-"+alunos[i].getAno();
                writer.println(registo); 
             }
             writer.close();
@@ -146,7 +155,7 @@ public class Calendario {
         } 
     }
     
-    public static void saveCadeiras(String CadeirasFile){
+    static void saveCadeiras(String CadeirasFile){
        File file =new File(CadeirasFile);
         PrintWriter writer;
         try {
@@ -163,7 +172,7 @@ public class Calendario {
         } 
     }
     
-    public static void saveCalendario(String CalendarioFile){
+    static void saveCalendario(String CalendarioFile){
        File file =new File(CalendarioFile);
         PrintWriter writer;
         try {
@@ -190,24 +199,7 @@ public class Calendario {
         saveCadeiras(CadeirasFile);
         saveCalendario(Calendario);
    }
-    
-    /**
-     *  ***API***
-     */
-    
-    
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) throws FileNotFoundException {
-        // TODO code application logic here        
-        readFiles(Alunos_File,Cadeiras_File,Calendario_File);
-        //mainAPI();
-        //fazer magia de IART
-        //apresentar e guardar resultado
-        writeFiles(Alunos_File,Cadeiras_File,Calendario_File);
-    }
-    
-     // PRIVATE
+        
+    // PRIVATE
     private static final Logger fLogger = Logger.getLogger(Calendario.class.getPackage().getName());
 }
