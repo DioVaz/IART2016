@@ -39,11 +39,17 @@ public class Calendario {
     /**
      *  FUNÇÕES AUXILIARES 
      */
+    
     public int getNumExames(){
         return exames.length;
     }
-    public Exame getExame(int pos){
-        return exames[pos];
+    public Exame getExame(String idCadeira, Boolean epoca){
+        for(int i=0; i<exames.length;i++){
+            if(exames[i].isCadeira(idCadeira, epoca)){
+                return exames[i];
+            }
+        }
+        return null;
     }
     public int getAnoExame(String IDCadeira){
         for(int i=0; i<cadeiras.length;i++){

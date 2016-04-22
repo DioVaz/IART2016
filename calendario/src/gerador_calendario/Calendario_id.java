@@ -33,6 +33,13 @@ class Calendario_id {
         dias[dia].add(cadeira, hora);
     }
     
+    public int numExames(){return dias.length*3;}
+
+    String getCadeira(int dia, int hora) {
+         String cadeira = dias[dia].getCadeira(hora);
+         return cadeira;
+    }
+    
     private static class Dia {
         String exames[];
         public Dia() {
@@ -46,9 +53,15 @@ class Calendario_id {
             //adicionar
             exames[pos]=cadeira;
         }
+
+        private String getCadeira(int hora) {
+            return exames[hora];
+        }
     }
     
-    
+    public void setForca(int forca){
+        this.forca=forca;
+    }
     
     
 }

@@ -33,11 +33,19 @@ public class Exame {
         }
         return inscritos;
     }
+    public int[] getAlunos(){return IDinscritos;}
     public String getEpoca(){
         if(epoca){return "NORMAL";}
         else{return "RECURSO";}
     }
     public Boolean getEpocaB(){
         return epoca;
+    }
+
+    boolean isCadeira(String idCadeira, Boolean epoca) {
+        if(this.epoca==epoca)
+        return this.cadeira.equals(idCadeira);
+        else
+        return false;
     }
 }

@@ -14,33 +14,48 @@ import calendario.Exame;
 public class Gerador {
     Calendario baseDados;
     
-    /*Calendarios com os anos dos exames*/
-    Calendario_ano anos_normal;
-    Calendario_ano anos_recurso;
-    /*Calendarios com os IDs das cadeiras*/
-    Calendario_id epocanormal;
-    Calendario_id epocarecurso;
     /*Populacao*/
     Calendario_id[] populacaoNormal;
     Calendario_id[] populacaoRecurso;
+    int populacaoInicial = 10;
+    int numMutantes = 4;
+    
+    /* *** ESTRUTURAS ALEATOREAS *** */
+    /*Calendarios com os anos dos exames*/
+    Calendario_ano anos;
+    /*Calendarios com os IDs das cadeiras*/
+    Calendario_id ids;
+    /*Calendarios com os IDs dos alunos inscritos*/
+    Calendario_alunos alunos;
+    
     
     /*
         *** CONSTRUTOR ***
     */
     Gerador(){
-        //começa por ler ficheiros da base de dados e gerar calendarios auxiliares
+        //começa por ler ficheiros da base de dados
         this.baseDados = new Calendario();
-        leCalendarios();   
     }
     
     /*
         *** CRIAR POPULAÇÃO ***
     */
-    void geraPopulacao(){
-        int populacaoInicial = 10;
+    void geraPopulacaoInicial(Boolean epoca){
+        if (epoca) {populacaoNormal = new Calendario_id[populacaoInicial+numMutantes];}
+        else {populacaoRecurso = new Calendario_id[populacaoInicial+numMutantes];}
         for(int i = 0; i<populacaoInicial; i++){
             //adicionar um novo calendario
-            geraCalendario();
+            geraCalendario(epoca);
+            if (epoca){populacaoNormal[i] = ids;}
+            else {populacaoRecurso[i] = ids;}
+        }
+        //ordenar por forca
+        //a implementar--- ordena populacao
+    }
+    
+    void geraPopulacaoMutante (int idCalendarios[]){
+        for(int i= 0; i<idCalendarios.length;i++){
+            populacaoNormal[populacaoInicial+i] = geraMutante(populacaoNormal[idCalendarios[i]]);
         }
     }
     
@@ -50,34 +65,27 @@ public class Gerador {
         return novo;
     }
     
-    void geraCalendario(){
+    Boolean  geraCalendario(Boolean epoca){
        //CRIA UM CALENDARIO ALEATORIO
-       //a implementar
+       //a implementar  UPDTATE(Calendario_id);
+       //GERAR AUXILIARES
+       geraAuxiliares(ids, epoca);
        //VERIFICA SE CALENDÁRIO É VALIDO - Sem exames do mesmo ano com menos de dois dias de distancia
-       anos_normal.checkValidade();
-       anos_recurso.checkValidade();
-       //CONTA ALUNOS PREJUDICADOS POR EXAMES MUITO PROXIMOS
-       contaAlunos();
+       if(anos.checkValidade()){
+           //CONTA ALUNOS PREJUDICADOS POR EXAMES MUITO PROXIMOS
+           ids.setForca(alunos.getForca());
+           return true;
+       }
+       return false;
     }
-    void contaAlunos(){
-        //compara duas listas de inscritos dos varios exames conta os repetidos
-    }
-    private void leCalendarios(){
-        for(int i = 0; i<baseDados.getNumExames();i++){
-            int totalNormal=0;
-            int totalRecurso=0;
-            Exame exame = baseDados.getExame(i);
-            if(exame.getEpocaB()){
-            //epoca NORMAL
-                anos_normal.addExame(baseDados.getAnoExame(exame.getCadeira()), (i-(i%3))/3, i%3);
-                epocanormal.addExame(exame.getCadeira(), (i-(i%3))/3, i%3);
-                totalNormal++;
-            }
-            else{
-            //epoca RECURSO
-                totalRecurso=i-totalNormal;
-                anos_recurso.addExame(baseDados.getAnoExame(exame.getCadeira()), (totalRecurso-(totalRecurso%3))/3, totalRecurso%3);
-                epocarecurso.addExame(exame.getCadeira(), (totalRecurso-(totalRecurso%3))/3, totalRecurso%3);
+    
+    private void geraAuxiliares(Calendario_id exames, Boolean epoca){
+        for(int i = 0; i<exames.numExames();i++){
+            for(int j = 0; j<3; j++){
+                String cadeiraID = exames.getCadeira(i,j);
+                Exame exame = baseDados.getExame(cadeiraID, epoca);
+                anos.addExame(baseDados.getAnoExame(cadeiraID), i, j);
+                alunos.addInscritos(exame.getAlunos(), i, j);
             }
         }
         
