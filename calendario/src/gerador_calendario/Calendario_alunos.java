@@ -33,24 +33,51 @@ public class Calendario_alunos {
     }
     
     private static class Dia {
-        Inscritos[] alunos;
+        Horas[] horas;
         public Dia() {
-           Inscritos novo[] = {null,null,null}; 
-           this.alunos=novo;
+           Horas novo[] = {null,null,null}; 
+           this.horas=novo;
         }
         
         public void add(int ins[], int pos){
             //verificar se pos valido
             if(pos>2){return;}
             //adicionar
-            Inscritos novo= new Inscritos(ins);
-            alunos[pos]=novo;
+            Horas novo= new Horas(ins);
+            horas[pos]=novo;
         }
+        
+        public Horas[] getHoras(){return horas;}
+        
+        public int getRepetidos(Horas[] diaSeguinte){
+            int count = 0;
+            Horas[] both = concat(diaSeguinte);
+            for(int i=0; i<both.length-1;i++){
+                for(int j=i+1;j<both.length;j++){
+                    int [] inscritosB = both[j].getInscritos();
+                    for (int w = 0; w<inscritosB.length;w++){
+                       if(both[i].estaInscrito(inscritosB[w])) count++; 
+                    }
+                }
+            }
+            return count;
+        }
+        
+        public Horas[] concat(Horas[] b) {
+            int aLen = horas.length;
+            int bLen = b.length;
+            Horas[] c= new Horas[aLen+bLen];
+            System.arraycopy(horas, 0, c, 0, aLen);
+            System.arraycopy(b, 0, c, aLen, bLen);
+            return c;
+         }
+        
     }
-
-    private static class Inscritos {
+    public int numExames(){return dias.length*3;}
+    
+    private static class Horas {
         int inscritos[];
-        public Inscritos(int inscritos[]){
+        public Horas(int inscritos[]){
             this.inscritos=inscritos;
         }
         Boolean estaInscrito(int idAluno){
@@ -61,10 +88,15 @@ public class Calendario_alunos {
             }
             return false;
         }
+        public int[] getInscritos(){return inscritos;}
     }
     
     public int getForca(){
-        //substituir forca por contagem de alunos prejudicados
-        return forca;
+        int numExames = dias.length*3;
+        int count=0;
+        for (int i = 1; i<numExames;i++){
+            count+=dias[i].getRepetidos(dias[i-1].getHoras());
+        }
+        return count;
     }
 }

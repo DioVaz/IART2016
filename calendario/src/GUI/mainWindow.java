@@ -5,6 +5,8 @@
  */
 package GUI;
 
+import gerador_calendario.Gerador;
+
 /**
  *
  * @author Diogo
@@ -13,10 +15,12 @@ package GUI;
  */
 public class mainWindow extends javax.swing.JFrame {
 
+    Gerador calendario;
     /**
      * Creates new form mainWindow
      */
     public mainWindow() {
+        this.calendario= new Gerador();
         initComponents();
     }
 

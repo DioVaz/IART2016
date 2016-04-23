@@ -32,7 +32,7 @@ public class Gerador {
     /*
         *** CONSTRUTOR ***
     */
-    Gerador(){
+    public Gerador(){
         //começa por ler ficheiros da base de dados
         this.baseDados = new Calendario();
     }
@@ -90,4 +90,6 @@ public class Gerador {
         }
         
     }
+    
+    
 }
