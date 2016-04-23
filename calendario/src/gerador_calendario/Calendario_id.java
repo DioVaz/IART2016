@@ -39,6 +39,15 @@ class Calendario_id {
          String cadeira = dias[dia].getCadeira(hora);
          return cadeira;
     }
+
+    boolean check(String cadeira, int dia, int hora) {
+        String ncadeira = dias[dia].getCadeira(hora);
+        if("0".equals(ncadeira)){
+            addExame(cadeira,dia,hora);
+            return true;
+        }
+        return false;
+    }
     
     private static class Dia {
         String exames[];

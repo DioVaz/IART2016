@@ -59,6 +59,13 @@ public class Calendario {
         }
         return 0;
     }
+    public String[] getCadeiras(){
+        String[] ids = new String[cadeiras.length];
+        for(int i = 0; i<cadeiras.length;i++){
+                ids[i]=cadeiras[i].getId();
+        }
+        return ids;
+    }
     
     /**
      *  FUNÇÕES AUXILIARES SAVE/LOAD

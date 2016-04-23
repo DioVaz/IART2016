@@ -19,14 +19,17 @@ public class Gerador {
     Calendario_id[] populacaoRecurso;
     int populacaoInicial = 10;
     int numMutantes = 4;
+    int dias = 10;
     
-    /* *** ESTRUTURAS ALEATOREAS *** */
+    /* *** ESTRUTURAS AUXILIARES *** */
     /*Calendarios com os anos dos exames*/
     Calendario_ano anos;
     /*Calendarios com os IDs das cadeiras*/
     Calendario_id ids;
     /*Calendarios com os IDs dos alunos inscritos*/
     Calendario_alunos alunos;
+    /*Lista de cadeiras*/
+    String[] cadeiras;
     
     
     /*
@@ -67,6 +70,7 @@ public class Gerador {
     
     Boolean  geraCalendario(Boolean epoca){
        //CRIA UM CALENDARIO ALEATORIO
+       ids = randomCalendario();
        //a implementar  UPDTATE(Calendario_id);
        //GERAR AUXILIARES
        geraAuxiliares(ids, epoca);
@@ -89,6 +93,19 @@ public class Gerador {
             }
         }
         
+    }
+
+    private Calendario_id randomCalendario() {
+        Calendario_id novo = new Calendario_id(dias);
+        int count=0;
+        while(count<cadeiras.length){
+            int dia = (int)(Math.random() * dias-1);
+            int hora =(int)(Math.random() * 2);
+            if(novo.check(cadeiras[count],dia,hora)){
+                count++;
+            }
+        }
+        return novo;
     }
     
     
