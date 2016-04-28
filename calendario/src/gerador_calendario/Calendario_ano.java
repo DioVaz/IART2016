@@ -43,7 +43,7 @@ public class Calendario_ano {
         }
     }
     
-    public Boolean checkValidade() {
+    public Boolean checkValidadeAnos() {
         //verificar se existem exames do mesmo ano com menos de 2 dias de diferença
         return true;
     }
