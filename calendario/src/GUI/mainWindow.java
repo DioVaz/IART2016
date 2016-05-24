@@ -22,6 +22,7 @@ public class mainWindow extends javax.swing.JFrame {
     public mainWindow() {
         this.calendario= new Gerador();
         initComponents();
+        //calendario.generateBots(50);
     }
 
     /**

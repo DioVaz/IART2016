@@ -48,4 +48,21 @@ public class Exame {
         else
         return false;
     }
+    
+    public void inscreveAluno(int id){      
+        int[] myIntArray = {id};
+        int aLen = IDinscritos.length;
+        int bLen = myIntArray.length;
+        int[] c= new int[aLen+bLen];
+        System.arraycopy(IDinscritos, 0, c, 0, aLen);
+        System.arraycopy(myIntArray, 0, c, aLen, bLen);
+        this.IDinscritos= c;
+    }
+    
+    public boolean inscrito(int IDaluno){
+        for(int i=0;i<IDinscritos.length;i++){
+            if(IDinscritos[i]==IDaluno) return true;
+        }
+        return false;
+    }
 }

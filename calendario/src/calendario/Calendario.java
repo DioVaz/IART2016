@@ -28,7 +28,7 @@ public class Calendario {
     static Aluno alunos[];
     static Cadeira cadeiras[];
     static Exame[] exames;
-    
+
     /*
         *** CONSTRUTOR ***
     */
@@ -51,7 +51,7 @@ public class Calendario {
         }
         return null;
     }
-    public int getAnoExame(String IDCadeira){
+    static public int getAnoExame(String IDCadeira){
         for(int i=0; i<cadeiras.length;i++){
             if (cadeiras[i].getId().equals(IDCadeira)){
                 return cadeiras[i].getAno();
@@ -221,17 +221,137 @@ public class Calendario {
         } 
     }
     /**
-     * @param AlunosFile
-     * @param CadeirasFile
-     * @param Inscritos
-     * @param Calendario
+     * 
      */
-    public static void writeFiles(String AlunosFile, String CadeirasFile, String Calendario){ 
-        saveAlunos(AlunosFile);
-        saveCadeiras(CadeirasFile);
-        saveCalendario(Calendario);
+    public static void writeFiles(){ 
+        saveAlunos(Alunos_File);
+        saveCadeiras(Cadeiras_File);
+        saveCalendario(Calendario_File);
    }
-        
-    // PRIVATE
-    private static final Logger fLogger = Logger.getLogger(Calendario.class.getPackage().getName());
+    
+    /*
+        *** GERAR BD ***
+    */
+    public static void generateBots(int botsPorAno){
+        List<Aluno> alunosL = new ArrayList<Aluno>();
+        while(botsPorAno>0){
+            alunosL.add(novoBot("1",botsPorAno));
+            alunosL.add(novoBot("2",botsPorAno));
+            alunosL.add(novoBot("3",botsPorAno));
+            alunosL.add(novoBot("4",botsPorAno));
+            botsPorAno--;
+        }
+        Aluno[] simpleArray = new Aluno[ alunosL.size() ];
+        alunosL.toArray( simpleArray );
+        int aLen = alunos.length;
+        int bLen = simpleArray.length;
+        Aluno[] c= new Aluno[aLen+bLen];
+        System.arraycopy(alunos, 0, c, 0, aLen);
+        System.arraycopy(simpleArray, 0, c, aLen, bLen);
+        alunos=c;
+    }
+    
+    private static Aluno novoBot(String anoS,int aluno) {
+        aluno+=10;
+        int foo = Integer.parseInt(anoS+aluno);
+        int ano = Integer.parseInt(anoS);
+        Aluno novo = new Aluno(foo,"Aluno Exemplar",ano);
+        inscreveAlunoBot(foo,ano);
+        return novo;
+    }
+    
+    private static void inscreveAlunoBot(int idAluno, int ano){
+        for(int i=0;i<exames.length;i++){
+            String idCadeira;
+            idCadeira = exames[i].getCadeira();
+            int anoC = getAnoExame(idCadeira);
+            if(ano==anoC){
+               exames[i].inscreveAluno(idAluno);
+           } 
+        }
+    }
+    
+    public static void main(String args[]) throws IOException {
+        Calendario novo = new Calendario();
+        int opcao=1;
+        while(opcao==1){
+            System.out.println("*** INSCRICAO ALUNOS: ***");
+            System.out.println("Escolher opcao:");
+            System.out.println("1 - Novo Aluno"); 
+            System.out.println("2 - Sair"); 
+            Scanner in = new Scanner(System.in); 
+            opcao=in.nextInt();
+            if(opcao==1){
+                System.out.println("Nome:"); 
+                Scanner nomeS = new Scanner(System.in); 
+                String nome=nomeS.next();
+                System.out.println("Ano:"); 
+                Scanner anoS = new Scanner(System.in);
+                int ano = anoS.nextInt();
+                System.out.println("ID:"); 
+                Scanner idS = new Scanner(System.in);
+                int id = idS.nextInt();
+                while(inscrito(id)){
+                    System.out.println("Já existe, manda outro ID:"); 
+                    idS = new Scanner(System.in);
+                    id = idS.nextInt();
+                }
+                
+                System.out.println(nome);
+                Aluno novoAluno = new Aluno (id,nome,ano);
+                Aluno[] simpleArray = {novoAluno};
+                menuInscreveAluno(id);
+                int aLen = alunos.length;
+                int bLen = simpleArray.length;
+                Aluno[] c= new Aluno[aLen+bLen];
+                System.arraycopy(alunos, 0, c, 0, aLen);
+                System.arraycopy(simpleArray, 0, c, aLen, bLen);
+                alunos=c; 
+            }
+        }
+        novo.writeFiles();
+        System.out.println("*** ADEUS TONE ***");
+    }
+    
+    static boolean inscrito(int IDaluno){
+        for(int i=0;i<alunos.length;i++){
+            if(alunos[i].getID()==IDaluno) return true;
+        }
+        return false;
+    }
+    
+    static void menuInscreveAluno(int idAluno){
+        boolean notdone=true;
+        System.out.println("*** EPOCA NORMAL ***");
+        int count = 7;
+        while(notdone && count>01){
+            System.out.println("Escolha as cadeiras - "+ count+ " maximo");
+            for (int i =0; i<cadeiras.length;i++){
+                System.out.println(i+" - "+cadeiras[i].getNome()+" - "+cadeiras[i].getAno());
+            }
+            System.out.println("Opcao:"); 
+            getInput (true, idAluno);
+            count--;
+        }
+    }
+    
+    static void getInput (boolean epoca, int idAluno){
+        while (true){
+            Scanner idS = new Scanner(System.in);
+            int idCadeiraS = idS.nextInt();
+            if(idCadeiraS<cadeiras.length){
+                String idCadeira = cadeiras[idCadeiraS].getId();
+                for (int i =0; i<exames.length;i++){
+                    if(exames[i].getEpocaB()==epoca && exames[i].getCadeira().equals(idCadeira)){
+                        if(!exames[i].inscrito(idAluno)){
+                            exames[i].inscreveAluno(idAluno);
+                            return;
+                        }
+                        System.out.println("Aluno ja inscrito nessa cadeira");
+                    }
+                }
+            }
+            System.out.println("Input invalido, tente novamente");
+        }
+    }
 }

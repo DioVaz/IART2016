@@ -232,5 +232,10 @@ public class Gerador {
         return null;
     }
 
+    public void generateBots(int i) {
+        baseDados.generateBots(i);
+        baseDados.writeFiles();
+    }
+
     
 }
