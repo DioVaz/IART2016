@@ -321,16 +321,30 @@ public class Calendario {
     }
     
     static void menuInscreveAluno(int idAluno){
+        //NORMAL
         boolean notdone=true;
         System.out.println("*** EPOCA NORMAL ***");
         int count = 7;
-        while(notdone && count>01){
+        while(notdone && count>0){
             System.out.println("Escolha as cadeiras - "+ count+ " maximo");
             for (int i =0; i<cadeiras.length;i++){
                 System.out.println(i+" - "+cadeiras[i].getNome()+" - "+cadeiras[i].getAno());
             }
             System.out.println("Opcao:"); 
             getInput (true, idAluno);
+            count--;
+        }
+        //RECURSO
+        notdone=true;
+        System.out.println("*** EPOCA RECURSO ***");
+        count = 7;
+        while(notdone && count>0){
+            System.out.println("Escolha as cadeiras - "+ count+ " maximo");
+            for (int i =0; i<cadeiras.length;i++){
+                System.out.println(i+" - "+cadeiras[i].getNome()+" - "+cadeiras[i].getAno());
+            }
+            System.out.println("Opcao:"); 
+            getInput (false, idAluno);
             count--;
         }
     }
