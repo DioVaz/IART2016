@@ -18,10 +18,12 @@ public class Gerador {
     /*Populacao*/
     Calendario_id[] populacaoNormal;
     Calendario_id[] populacaoRecurso;
-    int populacaoInicial = 10;
+    int populacaoInicial = 1000;
     int numMutantes = 4;
-    int dias = 10;
+    int dias = 11;
     int maxAlunosPrejudicados = 0;
+    int tentativa_por_bot = 10000;
+    int num_max_iteracoes = 90000;
     
     /* *** ESTRUTURAS AUXILIARES *** */
     /*Calendarios com os anos dos exames*/
@@ -38,8 +40,12 @@ public class Gerador {
         *** CONSTRUTOR ***
     */
     public Gerador(){
-        //começa por ler ficheiros da base de dados
+        //começa por ler ficheiros da base de dados e criar estruturas auxiliares
         this.baseDados = new Calendario();
+        this.anos= new Calendario_ano(dias);
+        this.alunos = new Calendario_alunos(dias);
+        this.cadeiras= baseDados.getCadeiras();
+        solve();
     }
     
     /*
@@ -75,12 +81,14 @@ public class Gerador {
         *** FUNÇÕES AUXILIARES DE CRIAR POPULAÇÃO ***
     */
     void geraPopulacaoInicial(Boolean epoca){
-        int tentativas=0;
+        //estruturas para guardar os diferentes especimes
         if (epoca) {populacaoNormal = new Calendario_id[populacaoInicial+numMutantes];}
         else {populacaoRecurso = new Calendario_id[populacaoInicial+numMutantes];}
+        //loop de criação de especimes
         for(int i = 0; i<populacaoInicial; i++){
-            //adicionar um novo calendario
-            while(!geraCalendario(epoca))tentativas++;
+            System.out.println("Individuo: "+i);
+            //gerar um novo calendario
+            geraCalendario(epoca);
             if (epoca){populacaoNormal[i] = ids;}
             else {populacaoRecurso[i] = ids;}
         }
@@ -132,10 +140,8 @@ public class Gerador {
                 if(i!=pos){
                     Calendario_id novo = crossOver(velho, populacaoNormal[i]);
                     geraAuxiliares(novo, epoca);
-                    if(anos.checkValidadeAnos()){
-                        novo.setForca(alunos.getForca());
-                        return novo;
-                    }
+                    novo.setForca(alunos.getForca());
+                    return novo;
                 }
             }
         }
@@ -143,11 +149,8 @@ public class Gerador {
             for(int i = 0; i<populacaoRecurso.length;i++){
                if(i!=pos){
                     Calendario_id novo = crossOver(velho, populacaoRecurso[i]); 
-                    geraAuxiliares(novo, epoca);
-                    if(anos.checkValidadeAnos()){
-                        novo.setForca(alunos.getForca());
-                        return novo;
-                    }
+                    novo.setForca(alunos.getForca());
+                    return novo;
                } 
             }
         }
@@ -155,43 +158,78 @@ public class Gerador {
         return null;
     }
     
-    Boolean  geraCalendario(Boolean epoca){
-       //CRIA UM CALENDARIO ALEATORIO
-       ids = randomCalendario();
-       //GERAR AUXILIARES
-       geraAuxiliares(ids, epoca);
-       //VERIFICA SE CALENDÁRIO É VALIDO - Sem exames do mesmo ano com menos de dois dias de distancia
-       if(anos.checkValidadeAnos()){
-           //CONTA ALUNOS PREJUDICADOS POR EXAMES MUITO PROXIMOS
-           ids.setForca(alunos.getForca());
-           return true;
-       }
-       return false;
+    void geraCalendario(Boolean epoca){
+        //CRIA UM CALENDARIO ALEATORIAMENTE E CRIA ESTRUTURAS AUXILIARES
+        int tentativas = 0;
+        while(!randomCalendario(epoca)){
+            System.out.println("tentativa: "+tentativas);
+            tentativas++;
+            if(tentativas>tentativa_por_bot){
+                System.out.println("Numero de tentativas ultrapassado para criar especime, altere valores de configuracao em Gerador.java");
+                return;
+            }  
+        }
+        //CONTA ALUNOS PREJUDICADOS POR EXAMES MUITO PROXIMOS
+        ids.setForca(alunos.getForca());
     }
     
     private void geraAuxiliares(Calendario_id exames, Boolean epoca){
-        for(int i = 0; i<exames.numExames();i++){
+        this.anos= new Calendario_ano(dias);
+        this.alunos = new Calendario_alunos(dias);
+        for(int i = 0; i<dias;i++){
             for(int j = 0; j<3; j++){
                 String cadeiraID = exames.getCadeira(i,j);
-                Exame exame = baseDados.getExame(cadeiraID, epoca);
-                anos.addExame(baseDados.getAnoExame(cadeiraID), i, j);
-                alunos.addInscritos(exame.getAlunos(), i, j);
+                if(!"0".equals(cadeiraID)){
+                    Exame exame = baseDados.getExame(cadeiraID, epoca);
+                    anos.addExame(baseDados.getAnoExame(cadeiraID), i, j);
+                    alunos.addInscritos(exame.getAlunos(), i, j);
+                }
             }
         }
         
     }
 
-    private Calendario_id randomCalendario() {
-        Calendario_id novo = new Calendario_id(dias);
+    boolean check_if_empty_and_valid(String cadeira, int dia, int hora) {
+        int anoCadeira = baseDados.getAnoExame(cadeira);
+        String ncadeira = ids.getCadeira(dia,hora);
+        if("0".equals(ncadeira)){//EMPTY
+            if(anos.valid_insertion_day(anoCadeira, dia)){//VALID
+                ids.addExame(cadeira,dia,hora);
+                return true;
+            }    
+        }
+        int nova_hora = anos.alternative_hour(dia);
+        if(nova_hora>0){//VALID ALTERNATIVE HOUR
+            if(anos.valid_insertion_day(anoCadeira, dia)){
+                ids.addExame(cadeira,dia,hora);
+                return true;
+            }   
+        }
+            
+        return false;
+    }
+    
+    public boolean randomCalendario(boolean epoca) {
+        this.ids = new Calendario_id(dias);
+        this.anos= new Calendario_ano(dias);
+        this.alunos = new Calendario_alunos(dias);
         int count=0;
+        int iteracoes = 0;
         while(count<cadeiras.length){
+            iteracoes++;
+            if(iteracoes>num_max_iteracoes) return false;
             int dia = (int)(Math.random() * dias-1);
             int hora =(int)(Math.random() * 2);
-            if(novo.check(cadeiras[count],dia,hora)){
+            if(check_if_empty_and_valid(cadeiras[count],dia,hora)){
+                String cadeiraID = ids.getCadeira(dia, hora);
+                Exame exame = baseDados.getExame(cadeiraID, epoca);
+                anos.addExame(baseDados.getAnoExame(cadeiraID), dia, hora);
+                alunos.addInscritos(exame.getAlunos(), dia, hora);
                 count++;
+                
             }
         }
-        return novo;
+        return true;
     }
 
     private Calendario_id crossOver(Calendario_id velho, Calendario_id velhoB) {
@@ -200,6 +238,7 @@ public class Gerador {
         int pos = (int)(Math.random() * posFinal);
         //tenta fazer crossover no ponto random para à frente
         for(int i = pos; i < posFinal;i++){
+            //Adicionar criação de auxiliares, verificação de validade e calculo de força
             Calendario_id novo = velho.crossOver(velhoB,i);
             if(novo.checkValidadeIDs()){
                 return novo;

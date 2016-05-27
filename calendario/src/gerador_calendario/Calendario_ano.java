@@ -15,6 +15,9 @@ public class Calendario_ano {
     
     public Calendario_ano(int dias){
         Dia[] novo = new Dia[dias];
+        for(int i =0;i<novo.length;i++){
+            novo[i]= new Dia();
+        }
         this.dias=novo;
     }
     
@@ -26,6 +29,22 @@ public class Calendario_ano {
      */
     public void addExame(int exame, int dia, int hora){
         dias[dia].add(exame, hora);
+    }
+
+    boolean valid_insertion_day(int anoCadeira, int dia) {
+        if(!dias[dia].valid_insertion(anoCadeira)) return false;
+        //dia anterior
+        if(dia>0){
+            if (!dias[dia-1].valid_insertion(anoCadeira)) return false;
+        }
+        if(dia<dias.length-1){
+            if (!dias[dia+1].valid_insertion(anoCadeira)) return false;
+        }
+        return true;
+    }
+
+    int alternative_hour(int dia) {
+        return dias[dia].alternative_hour_aux();
     }
     
     private static class Dia {
@@ -41,10 +60,38 @@ public class Calendario_ano {
             //adicionar
             exames[pos]=exame;
         }
+        
+        public boolean valid_insertion(int anoCadeira){
+            for(int i = 0; i<exames.length; i++){
+                if(exames[i]==anoCadeira){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private int alternative_hour_aux() {
+            for(int i = 0; i<exames.length; i++){
+                if(exames[i]==0) return i;
+            }
+            return 0;
+        }
     }
     
-    public Boolean checkValidadeAnos() {
+    public Boolean checkValidadeAnos(int anoCadeira) {
         //verificar se existem exames do mesmo ano com menos de 2 dias de diferença
+        for(int i = 1; i<dias.length;i++){
+            int aLen = 3;
+            int bLen = 3;
+            int[] c= new int[aLen+bLen];
+            System.arraycopy(dias[i-1].exames, 0, c, 0, aLen);
+            System.arraycopy(dias[i].exames, 0, c, aLen, bLen);
+            for (int j = 0; j<c.length-1;j++){
+                for (int z = j+1; z<c.length;z++){
+                    if(c[j]==c[z]) return false;
+                }
+            }
+        }
         return true;
     }
 }

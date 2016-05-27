@@ -20,6 +20,9 @@ class Calendario_id {
     
     public Calendario_id(int dias){
         Dia[] novo = new Dia[dias];
+        for(int i =0;i<novo.length;i++){
+            novo[i]= new Dia();
+        }
         this.dias=novo;
         this.forca = 9999;
     }
@@ -40,15 +43,6 @@ class Calendario_id {
     String getCadeira(int dia, int hora) {
          String cadeira = dias[dia].getCadeira(hora);
          return cadeira;
-    }
-
-    boolean check(String cadeira, int dia, int hora) {
-        String ncadeira = dias[dia].getCadeira(hora);
-        if("0".equals(ncadeira)){
-            addExame(cadeira,dia,hora);
-            return true;
-        }
-        return false;
     }
     
     int postoDia(int pos){

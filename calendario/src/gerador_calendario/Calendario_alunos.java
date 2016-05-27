@@ -19,6 +19,9 @@ public class Calendario_alunos {
     
     public Calendario_alunos(int dias){
         Dia[] novo = new Dia[dias];
+        for(int i =0;i<novo.length;i++){
+            novo[i]= new Dia();
+        }
         this.dias=novo;
     }
     
@@ -53,10 +56,14 @@ public class Calendario_alunos {
             int count = 0;
             Horas[] both = concat(diaSeguinte);
             for(int i=0; i<both.length-1;i++){
-                for(int j=i+1;j<both.length;j++){
-                    int [] inscritosB = both[j].getInscritos();
-                    for (int w = 0; w<inscritosB.length;w++){
-                       if(both[i].estaInscrito(inscritosB[w])) count++; 
+                if(both[i]!=null){
+                    for(int j=i+1;j<both.length;j++){
+                        if(both[j]!=null){
+                            int [] inscritosB = both[j].getInscritos();
+                            for (int w = 0; w<inscritosB.length;w++){
+                               if(both[i].estaInscrito(inscritosB[w])) count++; 
+                            }
+                        }
                     }
                 }
             }
@@ -92,9 +99,9 @@ public class Calendario_alunos {
     }
     
     public int getForca(){
-        int numExames = dias.length*3;
+        int numDias = dias.length;
         int count=0;
-        for (int i = 1; i<numExames;i++){
+        for (int i = 1; i<numDias;i++){
             count+=dias[i].getRepetidos(dias[i-1].getHoras());
         }
         return count;
