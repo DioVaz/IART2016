@@ -59,6 +59,16 @@ public class Calendario {
         }
         return 0;
     }
+    
+    static public String getNomeCadeira(String IDCadeira){
+        for(int i=0; i<cadeiras.length;i++){
+            if (cadeiras[i].getId().equals(IDCadeira)){
+                return cadeiras[i].getNome();
+            }
+        }
+        return " ";
+    }
+    
     public String[] getCadeiras(){
         String[] ids = new String[cadeiras.length];
         for(int i = 0; i<cadeiras.length;i++){
@@ -271,7 +281,7 @@ public class Calendario {
         }
     }
     
-    public static void main(String args[]) throws IOException {
+    public static void api_inscreve_alunos() throws IOException {
         Calendario novo = new Calendario();
         int opcao=1;
         while(opcao==1){

@@ -78,6 +78,20 @@ public class mainWindow extends javax.swing.JFrame {
             }
         ));
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setHeaderValue("Hora");
+            jTable1.getColumnModel().getColumn(1).setHeaderValue("Dia 1");
+            jTable1.getColumnModel().getColumn(2).setHeaderValue("Dia 2");
+            jTable1.getColumnModel().getColumn(3).setHeaderValue("Dia 3");
+            jTable1.getColumnModel().getColumn(4).setHeaderValue("Dia 4");
+            jTable1.getColumnModel().getColumn(5).setHeaderValue("Dia 5");
+            jTable1.getColumnModel().getColumn(6).setHeaderValue("Dia 6");
+            jTable1.getColumnModel().getColumn(7).setHeaderValue("Dia 7 ");
+            jTable1.getColumnModel().getColumn(8).setHeaderValue("Dia 8");
+            jTable1.getColumnModel().getColumn(9).setHeaderValue("Dia 9");
+            jTable1.getColumnModel().getColumn(10).setHeaderValue("Dia 10");
+            jTable1.getColumnModel().getColumn(11).setHeaderValue("Dia 11");
+        }
 
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -107,13 +121,13 @@ public class mainWindow extends javax.swing.JFrame {
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(138, 138, 138)
+                        .addContainerGap(282, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addGap(49, 49, 49)
                         .addComponent(jButton2)
                         .addGap(49, 49, 49)
                         .addComponent(jButton3)
-                        .addGap(0, 95, Short.MAX_VALUE))
+                        .addGap(0, 240, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
@@ -122,10 +136,10 @@ public class mainWindow extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addGap(335, 335, 335))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel4)
-                        .addGap(334, 334, 334))))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,9 +169,9 @@ public class mainWindow extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -169,8 +183,22 @@ public class mainWindow extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        calendario.solve();
+        updateTable();
     }//GEN-LAST:event_jButton2ActionPerformed
+    
+    private void updateTable(){
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            calendario.getTab(true),
+            calendario.getHeaders()
+        ));
+        
 
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            calendario.getTab(false),
+            calendario.getHeaders()
+        ));
+    }
     /**
      * @param args the command line arguments
      */

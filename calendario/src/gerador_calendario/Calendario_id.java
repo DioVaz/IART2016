@@ -56,32 +56,21 @@ class Calendario_id {
 
     Calendario_id crossOver(Calendario_id calendarioB, int pos) {
         Calendario_id novo = new Calendario_id(numDias());
-        int hora = postoHora(pos);
-        int dia = postoDia(pos);
-        novo.crossOverAux(dias,dia,hora,true);
-        novo.crossOverAux(calendarioB.dias,dia,hora,false);
+        novo.crossOverAux(dias,pos,true);
+        novo.crossOverAux(calendarioB.dias,pos,false);
         return novo;
     }
 
-    private void crossOverAux(Dia[] dias, int dia, int hora, boolean b) {
+    private void crossOverAux(Dia[] dias, int pos, boolean b) {
         if(b){
-            int i=0;
-            for(;i<dia;i++){
-                addDia(dias[i],i);
-            }
-            for(int j=0;j<hora+1;j++){
-                addHora(dias[i],i,j);
+            for(int i=0;i<pos;i++){
+                this.dias[i]=dias[i];
             }
         }
         else{
-            int i=dia;
-            for(int j=dia;j<3;j++){
-                addHora(dias[i],i,j);
-            }
-            for(;i<dias.length;i++){
-                addDia(dias[i],i);
-            }
-             
+            for(int i=pos;i<dias.length;i++){
+                this.dias[i]=dias[i];
+            }    
         }
     }
 
