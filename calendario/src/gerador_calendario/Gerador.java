@@ -18,12 +18,12 @@ public class Gerador {
     Calendario baseDados;
     Calendario_id[] populacaoNormal;
     Calendario_id[] populacaoRecurso;
-    int populacaoInicial = 1000000;
+    int populacaoInicial = 10000;
     int numMutantes = 4000;
     int dias = 11;
     int horas_por_dia=3;
     int maxAlunosPrejudicados = 0;
-    int max_geracoes = 10000;
+    int max_geracoes = 100;
     int tentativa_por_bot = 10000;
     int num_max_iteracoes = 90000;
     int maximo_tentativas_mutacao = 3000;
