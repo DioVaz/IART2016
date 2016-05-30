@@ -18,12 +18,12 @@ public class Gerador {
     Calendario baseDados;
     Calendario_id[] populacaoNormal;
     Calendario_id[] populacaoRecurso;
-    int populacaoInicial = 10;
-    int numMutantes = 2;
-    int dias = 20;
+    int populacaoInicial = 1000000;
+    int numMutantes = 4000;
+    int dias = 11;
     int horas_por_dia=3;
     int maxAlunosPrejudicados = 0;
-    int max_geracoes = 20;
+    int max_geracoes = 10000;
     int tentativa_por_bot = 10000;
     int num_max_iteracoes = 90000;
     int maximo_tentativas_mutacao = 3000;
@@ -68,6 +68,8 @@ public class Gerador {
             geracao++;
         }
         System.out.println("GERACAO: "+geracao+" forca = "+populacaoNormal[0].getForca());
+        int geracaoN = geracao;
+        int forcaN = populacaoNormal[0].getForca();
         /*
             Época de recurso
         */
@@ -81,7 +83,8 @@ public class Gerador {
             ordena_populacao(false);
             geracao++;
         }
-        System.out.println("GERACAO: "+geracao+" forca = "+populacaoRecurso[0].getForca());
+        System.out.println("Normal: "+geracaoN+" geracoes, forca = "+forcaN);
+        System.out.println("Recurso: "+geracao+" geracoes, forca = "+populacaoRecurso[0].getForca());
         System.out.println("*** TERMINADO ***");
     }
     
@@ -111,7 +114,7 @@ public class Gerador {
             if(epoca){
                 populacaoNormal[populacaoInicial+mutantes] = geraMutante(epoca);
                 if(populacaoNormal[populacaoInicial+mutantes]==null){
-                    System.out.println("mutante null");
+                    //System.out.println("mutante null");
                     tentativas++;
                 }
                 else{
@@ -122,7 +125,7 @@ public class Gerador {
             else{
                 populacaoRecurso[populacaoInicial+mutantes] = geraMutante(epoca);
                 if(populacaoRecurso[populacaoInicial+mutantes]==null){
-                    System.out.println("mutante null");
+                    //System.out.println("mutante null");
                     tentativas++;
                 }
                 else{
@@ -162,9 +165,10 @@ public class Gerador {
         while(count<cadeiras.length){
             iteracoes++;
             if(iteracoes>num_max_iteracoes) return false;
-            int dia = (int)(Math.random() * dias-1);
+            int dia = (int)(Math.random() * dias);
             int hora =(int)(Math.random() * 2);
-            if(check_if_empty_and_valid(cadeiras[count],dia,hora)){
+            hora=check_if_empty_and_valid(cadeiras[count],dia,hora);
+            if(hora>=0){
                 String cadeiraID = ids.getCadeira(dia, hora);
                 Exame exame = baseDados.getExame(cadeiraID, epoca);
                 anos.addExame(baseDados.getAnoExame(cadeiraID), dia, hora);
@@ -173,27 +177,30 @@ public class Gerador {
                 
             }
         }
+        if(ids.contaCadeiras()<16){
+            return false;
+        }
         return true;
     }
      
-    boolean check_if_empty_and_valid(String cadeira, int dia, int hora) {
+    int check_if_empty_and_valid(String cadeira, int dia, int hora) {
         int anoCadeira = baseDados.getAnoExame(cadeira);
         String ncadeira = ids.getCadeira(dia,hora);
         if("0".equals(ncadeira)){//EMPTY
             if(anos.valid_insertion_day(anoCadeira, dia)){//VALID
                 ids.addExame(cadeira,dia,hora);
-                return true;
+                return hora;
             }    
         }
         int nova_hora = anos.alternative_hour(dia);
-        if(nova_hora>0){//VALID ALTERNATIVE HOUR
+        if(nova_hora>=0){//VALID ALTERNATIVE HOUR
             if(anos.valid_insertion_day(anoCadeira, dia)){
-                ids.addExame(cadeira,dia,hora);
-                return true;
+                ids.addExame(cadeira,dia,nova_hora);
+                return nova_hora;
             }   
         }
             
-        return false;
+        return -1;
     }
     //_________________________________________
     
@@ -258,9 +265,11 @@ public class Gerador {
     
     private Calendario_id crossOver(Calendario_id velho, Calendario_id velhoB) {
        //Ponto de corte aleatorio
+       velho.contaCadeiras();
+       velhoB.contaCadeiras();
         int pos = (int)(Math.random() * dias);
         Calendario_id novo = velho.crossOver(velhoB, pos);
-        if(novo.checkValidadeIDs()){return novo;}
+        if(novo.checkValidadeIDs(cadeiras)){return novo;}
         return null;
     }
     //_________________________________________
@@ -277,6 +286,7 @@ public class Gerador {
             if(epoca){
                 novo[pos]=populacaoNormal[posT];
                 forca =populacaoNormal[posT].getForca();
+                novo[pos].contaCadeiras();
             }
             else{
                 novo[pos]=populacaoRecurso[posT];
@@ -351,7 +361,7 @@ public class Gerador {
         return novo;
     }
     public Object [][] getTab(Boolean epoca){
-        Object [][] novo = new Object[horas_por_dia+1][dias+1];
+        Object [][] novo = new Object[horas_por_dia][dias+1];
         for(int i = 0; i<horas_por_dia;i++){
            for(int j = 0; j<=dias;j++){
                int turno =i+1;

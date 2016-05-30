@@ -99,6 +99,21 @@ class Calendario_id {
         private String getCadeira(int hora) {
             return exames[hora];
         }
+
+        private boolean existe(String cadeira) {
+            for(int i = 0; i<exames.length;i++){
+                if(cadeira.equals(exames[i]))return true;
+            }
+            return false;
+        }
+        
+        private int contaCadeiras(){
+            int count=0;
+           for(int i = 0; i<exames.length;i++){
+                if(exames[i]!="0")count++;
+            }
+            return count; 
+        }
     }
     
     public void setForca(int forca){
@@ -107,7 +122,14 @@ class Calendario_id {
     public int getForca(){
         return forca;
     }
-    public Boolean checkValidadeIDs(){
+    public int contaCadeiras(){
+        int contador=0;
+        for(int i=0;i<dias.length;i++){
+            contador+=dias[i].contaCadeiras();
+        }
+        return contador;
+    }
+    public Boolean checkValidadeIDs(String[] cadeiras){
         for(int i = 0; i<numExames()-1;i++){
             String cadeira = getCadeira(postoDia(i),postoHora(i));
             if(!"0".equals(cadeira)){
@@ -117,7 +139,15 @@ class Calendario_id {
                 }
             }
         }
+        for(int i=0;i<cadeiras.length;i++){
+            for(int j=0; j<dias.length;j++){
+                if(dias[j].existe(cadeiras[i])){j=dias.length;}
+                else if(j==dias.length-1){
+                    return false;}
+            }
+        }
         return true;
     }
    
+    
 }
